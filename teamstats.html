@@ -5,13 +5,16 @@
    <title>Test</title>
   </head>
   <body>
+    <p id="p0"></p>
     <p id="p1"></p>
+    <p id="p2"></p>
+    <p id="p3"></p>
+    <p id="p4"></p>
     <script>
       
       //Consider doing team win-rate, or something of the sort.
       //Think of stats that populate as a team.
       
-      var examp;
       var champs = {};
       var players = new Array();
       
@@ -19,32 +22,31 @@
       var key = "";
       var championlookup = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/<champid>?api_key=" + key; 
       
-      var dyrus = "https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/5908/ranked?season=SEASON2015&api_key=" + key;     
-      var santorin = "https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/57029179/ranked?season=SEASON2015&api_key=" + key;   
-      var bjergsen = "https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50759139/ranked?season=SEASON2015&api_key=" + key;
-      var lustboy = "https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/56917699/ranked?season=SEASON2015&api_key=" + key;
-      var wildturtle = "https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/18991200/ranked?season=SEASON2015&api_key=" + key;
+      var dyrus = {url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/5908/ranked?season=SEASON2015&api_key=" + key), position:0};     
+      var santorin = {url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/57029179/ranked?season=SEASON2015&api_key=" + key), position:1};   
+      var bjergsen = {url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50759139/ranked?season=SEASON2015&api_key=" + key), position:2};
+      var lustboy = {url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/56917699/ranked?season=SEASON2015&api_key=" + key), position:3};
+      var wildturtle = {url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/18991200/ranked?season=SEASON2015&api_key=" + key), position:4};
       
-      function loadJSONAsync(url, callback) {
+      function loadJSONAsync(player, callback) {
         var xmlHttp = new XMLHttpRequest();
         if(xmlHttp){
         xmlHttp.onreadystatechange = function(){
             if(xmlHttp.readyState == 1) {
-                //p4.innerHTML = "Status 1: Server connection established! <br/>";
+                console.log("Status 1: Server connection established! <br/>");
             }
             else if (xmlHttp.readyState == 2) {
-                //p4.innerHTML = "Status 2: Request recieved! <br/>";
+               console.log("Status 2: Request recieved! <br/>");
             }
             else if (xmlHttp.readyState == 3) {
-                //p4.innerHTML = "Status 3: Processing Request!<br/>";
+               console.log("Status 3: Processing Request!<br/>");
             }
             else if (xmlHttp.readyState == 4) {
         
                 if(xmlHttp.status == 200) {
                     var text = xmlHttp.responseText;
                     var obj = JSON.parse(text);
-                    callback(obj);
-                    return; 
+                    callback(obj, player.position);
                 }
                 else {
                     alert("Something is wrong!");
@@ -52,22 +54,20 @@
             }
             };
         
-        xmlHttp.open("GET", url, true);
+        xmlHttp.open("GET", player.url, true);
         xmlHttp.send();
         }
       }
       
-    function mostPlayed(examp) {
-      for (i = 0; i < examp["champions"].length; i++) {
-        //champs.push(examp["champions"][i]["id"]);
-        //alert(examp["champions"][i]["stats"].totalSessionsPlayed);
-        var id = examp["champions"][i]["id"];
-        var most = examp["champions"][i]["stats"].totalSessionsPlayed;
+    function mostPlayed(stats, position) {
+      for (i = 0; i < stats["champions"].length; i++) {
+        var id = stats["champions"][i]["id"];
+        var most = stats["champions"][i]["stats"].totalSessionsPlayed;
         champs[id] = most;
       }
+        champs["position"] = position;
       
-      var highest = 0;
-      
+      var highest = 0;   
       for (var id in champs) {
         if (champs.hasOwnProperty(id)) {
           if (champs[id] > highest && id != 0) {
@@ -79,10 +79,13 @@
       console.log(highest);
       console.log(highestid);
       console.log(championlookup.replace("<champid>", highestid));
-      var obj = {champ:highestid, games:highest};
-      players.push(obj);
+      console.log(JSON.stringify(champs));
+      var playerstats = {champ:highestid, games:highest, position:position};
+      players.push(playerstats);
+      
+      champs = {};      
     }
-    
+ 
     //Returns true if players array is filled to cap.  
     function arrayFinished(cap) {
       return(players.length == cap);
@@ -96,12 +99,24 @@
         if(arrayFinished(cap)) {
           clearInterval(timeout);
           isFinished = true;
-          console.log(players);
-          document.getElementById("p1").innerHTML = players[1];
+          
+          players.sort(compare);
+
+          document.getElementById("p0").innerHTML = players[0].champ;
+          document.getElementById("p1").innerHTML = players[1].champ;
+          document.getElementById("p2").innerHTML = players[2].champ;
+          document.getElementById("p3").innerHTML = players[3].champ;
+          document.getElementById("p4").innerHTML = players[4].champ;
         }
       }, 100);
     }
     
+    //Sorts in ascending order by player position down the map, top to adc.
+    function compare(a, b) {
+      return a.position - b.position;
+    }
+    
+    //...clears player array.
     function clearPlayerArray() {
       players = [];
     }
@@ -118,7 +133,6 @@
     }
     
     loadTSM();
-    
     //Callback function is whatever I want to actually use it for.
     //Like getting most-played champ or whatever.
     
