@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   <meta charset="UTF-8">
+   <title>Test</title>
+  </head>
+  <body>
+    <p id="p1"></p>
+    <script>
+      
+      //Consider doing team win-rate, or something of the sort.
+      //Think of stats that populate as a team.
+      
+      var examp;
+      var champs = {};
+      var players = new Array();
+      
+      //Insert your key here.
+      var key = "";
+      var championlookup = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/<champid>?api_key=" + key; 
+      
+      var dyrus = "https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/5908/ranked?season=SEASON2015&api_key=" + key;     
+      var santorin = "https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/57029179/ranked?season=SEASON2015&api_key=" + key;   
+      var bjergsen = "https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50759139/ranked?season=SEASON2015&api_key=" + key;
+      var lustboy = "https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/56917699/ranked?season=SEASON2015&api_key=" + key;
+      var wildturtle = "https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/18991200/ranked?season=SEASON2015&api_key=" + key;
+      
+      function loadJSONAsync(url, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        if(xmlHttp){
+        xmlHttp.onreadystatechange = function(){
+            if(xmlHttp.readyState == 1) {
+                //p4.innerHTML = "Status 1: Server connection established! <br/>";
+            }
+            else if (xmlHttp.readyState == 2) {
+                //p4.innerHTML = "Status 2: Request recieved! <br/>";
+            }
+            else if (xmlHttp.readyState == 3) {
+                //p4.innerHTML = "Status 3: Processing Request!<br/>";
+            }
+            else if (xmlHttp.readyState == 4) {
+        
+                if(xmlHttp.status == 200) {
+                    var text = xmlHttp.responseText;
+                    var obj = JSON.parse(text);
+                    callback(obj);
+                    return; 
+                }
+                else {
+                    alert("Something is wrong!");
+                }
+            }
+            };
+        
+        xmlHttp.open("GET", url, true);
+        xmlHttp.send();
+        }
+      }
+      
+    function mostPlayed(examp) {
+      for (i = 0; i < examp["champions"].length; i++) {
+        //champs.push(examp["champions"][i]["id"]);
+        //alert(examp["champions"][i]["stats"].totalSessionsPlayed);
+        var id = examp["champions"][i]["id"];
+        var most = examp["champions"][i]["stats"].totalSessionsPlayed;
+        champs[id] = most;
+      }
+      
+      var highest = 0;
+      
+      for (var id in champs) {
+        if (champs.hasOwnProperty(id)) {
+          if (champs[id] > highest && id != 0) {
+            var highest = champs[id];
+            var highestid = id;
+          }
+        }
+      }
+      console.log(highest);
+      console.log(highestid);
+      console.log(championlookup.replace("<champid>", highestid));
+      var obj = {champ:highestid, games:highest};
+      players.push(obj);
+    }
+    
+    //Returns true if players array is filled to cap.  
+    function arrayFinished(cap) {
+      return(players.length == cap);
+    }
+    
+    //Checks if array is filled to cap every interval. Only then is it processed to avoid processing
+    //an empty array. Takes a parameter for the array cap that is passed to arrayFinished().
+    function checkIfFinished(cap) {
+      var isfinished = false;
+      var timeout = setInterval(function() {
+        if(arrayFinished(cap)) {
+          clearInterval(timeout);
+          isFinished = true;
+          console.log(players);
+          document.getElementById("p1").innerHTML = players[1];
+        }
+      }, 100);
+    }
+    
+    function clearPlayerArray() {
+      players = [];
+    }
+    
+    //This is how you call the JSON function every time:
+    function loadTSM() {
+      clearPlayerArray();
+      loadJSONAsync(dyrus, mostPlayed);
+      loadJSONAsync(santorin, mostPlayed);
+      loadJSONAsync(bjergsen, mostPlayed);
+      loadJSONAsync(lustboy, mostPlayed);
+      loadJSONAsync(wildturtle, mostPlayed);   
+      checkIfFinished(5);      
+    }
+    
+    loadTSM();
+    
+    //Callback function is whatever I want to actually use it for.
+    //Like getting most-played champ or whatever.
+    
+    //My idea is to fill an array with member objects 
+    //The array will not be processed until it is filled with all members.
+      
+    </script>
+  </body>
+</html>
