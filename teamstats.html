@@ -15,19 +15,20 @@
       //Consider doing team win-rate, or something of the sort.
       //Think of stats that populate as a team.
       
-      var champs = {};
       var players = new Array();
       
       //Insert your key here.
       var key = "";
       var championlookup = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/<champid>?api_key=" + key; 
       
-      var dyrus = {url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/5908/ranked?season=SEASON2015&api_key=" + key), position:0};     
-      var santorin = {url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/57029179/ranked?season=SEASON2015&api_key=" + key), position:1};   
-      var bjergsen = {url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50759139/ranked?season=SEASON2015&api_key=" + key), position:2};
-      var lustboy = {url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/56917699/ranked?season=SEASON2015&api_key=" + key), position:3};
-      var wildturtle = {url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/18991200/ranked?season=SEASON2015&api_key=" + key), position:4};
-      
+      var playersu = {
+        "tsm": {
+          "dyrus":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/5908/ranked?season=SEASON2015&api_key=" + key), id:5908, position:0},
+          "santorin":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/57029179/ranked?season=SEASON2015&api_key=" + key), id:57029179, position:1},  
+          "bjergsen":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50759139/ranked?season=SEASON2015&api_key=" + key), id:50759139, position:2},
+          "lustboy":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/56917699/ranked?season=SEASON2015&api_key=" + key), id:56917699, position:3},
+          "wildturtle":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/18991200/ranked?season=SEASON2015&api_key=" + key), id:18991200, position:4}}};
+
       function loadJSONAsync(player, callback) {
         var xmlHttp = new XMLHttpRequest();
         if(xmlHttp){
@@ -44,9 +45,9 @@
             else if (xmlHttp.readyState == 4) {
         
                 if(xmlHttp.status == 200) {
-                    var text = xmlHttp.responseText;
-                    var obj = JSON.parse(text);
-                    callback(obj, player.position);
+                  var text = xmlHttp.responseText;
+                  var obj = JSON.parse(text);
+                  callback(obj);
                 }
                 else {
                     alert("Something is wrong!");
@@ -59,54 +60,73 @@
         }
       }
       
-    function mostPlayed(stats, position) {
-      for (i = 0; i < stats["champions"].length; i++) {
-        var id = stats["champions"][i]["id"];
+    function mostPlayed(stats) {
+      var champs = {};
+      for (var i in stats["champions"]) {
+        var champid = stats["champions"][i]["id"];
         var most = stats["champions"][i]["stats"].totalSessionsPlayed;
-        champs[id] = most;
+        champs[champid] = most;
       }
-        champs["position"] = position;
       
-      var highest = 0;   
-      for (var id in champs) {
-        if (champs.hasOwnProperty(id)) {
-          if (champs[id] > highest && id != 0) {
-            var highest = champs[id];
-            var highestid = id;
+      var idd = stats["summonerId"];
+      console.log(idd);
+      var pospospos;
+      
+      for (var team in playersu) {
+        for (var p in playersu[team]) {
+          if ((playersu[team][p]["id"]) == idd) {
+            pospospos = (playersu[team][p]["position"])
           }
         }
       }
-      console.log(highest);
+      console.log(pospospos);  
+      console.log(champs);
+      
+      var highest = 0;   
+      for (var z in champs) {
+        if (champs.hasOwnProperty(z)) {
+          if (champs[z] > highest && z != 0) {
+            var highest = champs[z];
+            var highestid = z;
+          }
+        }
+      }
+      
       console.log(highestid);
+      console.log(highest);
       console.log(championlookup.replace("<champid>", highestid));
       console.log(JSON.stringify(champs));
-      var playerstats = {champ:highestid, games:highest, position:position};
-      players.push(playerstats);
       
+      var playerstats = {champ:highestid, games:highest, position:pospospos};     
+      players.push(playerstats);
       champs = {};      
     }
- 
+    
+    function populate() {
+      
+    }
+    
     //Returns true if players array is filled to cap.  
     function arrayFinished(cap) {
-      return(players.length == cap);
+      return(players.length == 5);
     }
     
     //Checks if array is filled to cap every interval. Only then is it processed to avoid processing
     //an empty array. Takes a parameter for the array cap that is passed to arrayFinished().
     function checkIfFinished(cap) {
-      var isfinished = false;
       var timeout = setInterval(function() {
         if(arrayFinished(cap)) {
-          clearInterval(timeout);
-          isFinished = true;
-          
+        
+          clearInterval(timeout);      
           players.sort(compare);
-
-          document.getElementById("p0").innerHTML = players[0].champ;
-          document.getElementById("p1").innerHTML = players[1].champ;
-          document.getElementById("p2").innerHTML = players[2].champ;
-          document.getElementById("p3").innerHTML = players[3].champ;
-          document.getElementById("p4").innerHTML = players[4].champ;
+          
+          console.log(players[0].champ);
+          console.log("TEST");
+          document.getElementById("p0").innerHTML = players[0].position;
+          document.getElementById("p1").innerHTML = players[1].position;
+          document.getElementById("p2").innerHTML = players[2].position;
+          document.getElementById("p3").innerHTML = players[3].position;
+          document.getElementById("p4").innerHTML = players[4].position;
         }
       }, 100);
     }
@@ -124,11 +144,12 @@
     //This is how you call the JSON function every time:
     function loadTSM() {
       clearPlayerArray();
-      loadJSONAsync(dyrus, mostPlayed);
-      loadJSONAsync(santorin, mostPlayed);
-      loadJSONAsync(bjergsen, mostPlayed);
-      loadJSONAsync(lustboy, mostPlayed);
-      loadJSONAsync(wildturtle, mostPlayed);   
+      
+      loadJSONAsync(playersu["tsm"]["dyrus"], mostPlayed);
+      loadJSONAsync(playersu["tsm"]["santorin"], mostPlayed);
+      loadJSONAsync(playersu["tsm"]["bjergsen"], mostPlayed);
+      loadJSONAsync(playersu["tsm"]["wildturtle"], mostPlayed);
+      loadJSONAsync(playersu["tsm"]["lustboy"], mostPlayed);   
       checkIfFinished(5);      
     }
     
