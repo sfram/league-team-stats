@@ -15,10 +15,11 @@
       //Consider doing team win-rate, or something of the sort.
       //Think of stats that populate as a team.
       
+      var nameSpace = {};
       var players = new Array();
       
       //Insert your key here.
-      var key = "";
+      var key = "5078e4f1-8729-4653-87c0-a0356049f292";
       var championlookup = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/<champid>?api_key=" + key; 
       
       var playersu = {
@@ -44,7 +45,7 @@
             }
             else if (xmlHttp.readyState == 4) {
         
-                if(xmlHttp.status == 200) {
+                if (xmlHttp.status == 200) {
                   var text = xmlHttp.responseText;
                   var obj = JSON.parse(text);
                   callback(obj);
@@ -55,7 +56,7 @@
             }
             };
         
-        xmlHttp.open("GET", player.url, true);
+        xmlHttp.open("GET", player, true);
         xmlHttp.send();
         }
       }
@@ -97,40 +98,40 @@
       console.log(championlookup.replace("<champid>", highestid));
       console.log(JSON.stringify(champs));
       
-      var playerstats = {champ:highestid, games:highest, position:pospospos};     
-      players.push(playerstats);
-      champs = {};      
-    }
-    
-    function populate() {
+      var newurl = championlookup.replace("<champid>", highestid);
       
+      loadJSONAsync(newurl, function(obj) {
+        var playerstats = {champ:obj.key, games:highest, position:pospospos};     
+        players.push(playerstats);
+        champs = {};   
+      });
     }
     
     //Returns true if players array is filled to cap.  
-    function arrayFinished(cap) {
-      return(players.length == 5);
+    function arrayFinished(arr, cap) {
+      return(arr.length == cap);
     }
     
     //Checks if array is filled to cap every interval. Only then is it processed to avoid processing
     //an empty array. Takes a parameter for the array cap that is passed to arrayFinished().
     function checkIfFinished(cap) {
       var timeout = setInterval(function() {
-        if(arrayFinished(cap)) {
+        if(arrayFinished(players, cap)) {
         
-          clearInterval(timeout);      
+          clearInterval(timeout);
           players.sort(compare);
           
           console.log(players[0].champ);
-          console.log("TEST");
-          document.getElementById("p0").innerHTML = players[0].position;
-          document.getElementById("p1").innerHTML = players[1].position;
-          document.getElementById("p2").innerHTML = players[2].position;
-          document.getElementById("p3").innerHTML = players[3].position;
-          document.getElementById("p4").innerHTML = players[4].position;
+          console.log(players);
+          document.getElementById("p0").innerHTML = players[0].champ;
+          document.getElementById("p1").innerHTML = players[1].champ;
+          document.getElementById("p2").innerHTML = players[2].champ;
+          document.getElementById("p3").innerHTML = players[3].champ;
+          document.getElementById("p4").innerHTML = players[4].champ;
         }
       }, 100);
     }
-    
+
     //Sorts in ascending order by player position down the map, top to adc.
     function compare(a, b) {
       return a.position - b.position;
@@ -145,11 +146,11 @@
     function loadTSM() {
       clearPlayerArray();
       
-      loadJSONAsync(playersu["tsm"]["dyrus"], mostPlayed);
-      loadJSONAsync(playersu["tsm"]["santorin"], mostPlayed);
-      loadJSONAsync(playersu["tsm"]["bjergsen"], mostPlayed);
-      loadJSONAsync(playersu["tsm"]["wildturtle"], mostPlayed);
-      loadJSONAsync(playersu["tsm"]["lustboy"], mostPlayed);   
+      loadJSONAsync(playersu["tsm"]["dyrus"]["url"], mostPlayed);
+      loadJSONAsync(playersu["tsm"]["santorin"]["url"], mostPlayed);
+      loadJSONAsync(playersu["tsm"]["bjergsen"]["url"], mostPlayed);
+      loadJSONAsync(playersu["tsm"]["wildturtle"]["url"], mostPlayed);
+      loadJSONAsync(playersu["tsm"]["lustboy"]["url"], mostPlayed);   
       checkIfFinished(5);      
     }
     
