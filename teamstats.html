@@ -10,38 +10,70 @@
     <p id="p2"></p>
     <p id="p3"></p>
     <p id="p4"></p>
+    <p id="p5"></p>
+    <button onclick="loadTSM()">Click me</button>
+    <button onclick="loadC9()">Click me</button>    
     <script>
       
       //Consider doing team win-rate, or something of the sort.
       //Think of stats that populate as a team.
       
       var nameSpace = {};
+      var allChamps = {};      
       var players = new Array();
       
       //Insert your key here.
-      var key = "5078e4f1-8729-4653-87c0-a0356049f292";
+      var key = "";
       var championlookup = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/<champid>?api_key=" + key; 
+      var imgurl = "http://ddragon.leagueoflegends.com/cdn/5.14.1/img/champion/";
       
       var playersu = {
-        "tsm": {
-          "dyrus":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/5908/ranked?season=SEASON2015&api_key=" + key), id:5908, position:0},
-          "santorin":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/57029179/ranked?season=SEASON2015&api_key=" + key), id:57029179, position:1},  
-          "bjergsen":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50759139/ranked?season=SEASON2015&api_key=" + key), id:50759139, position:2},
-          "lustboy":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/56917699/ranked?season=SEASON2015&api_key=" + key), id:56917699, position:3},
-          "wildturtle":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/18991200/ranked?season=SEASON2015&api_key=" + key), id:18991200, position:4}}};
+        "TSM": {
+          "wholeTeam":"https://na.api.pvp.net/api/lol/na/v1.4/summoner/5908, 57029179, 50759139, 56917699, 18991200?api_key=5078e4f1-8729-4653-87c0-a0356049f292",
+          "Dyrus":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/5908/ranked?season=SEASON2015&api_key=" + key), id:5908, position:0},
+          "Santorin":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/57029179/ranked?season=SEASON2015&api_key=" + key), id:57029179, position:1},  
+          "Bjergsen":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50759139/ranked?season=SEASON2015&api_key=" + key), id:50759139, position:2},
+          "Lustboy":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/56917699/ranked?season=SEASON2015&api_key=" + key), id:56917699, position:3},
+          "Wildturtle":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/18991200/ranked?season=SEASON2015&api_key=" + key), id:18991200, position:4}
+         },
+        "CLG": {
+          "wholeTeam":"https://na.api.pvp.net/api/lol/na/v1.4/summoner/5908, 57029179, 50759139, 56917699, 18991200?api_key=5078e4f1-8729-4653-87c0-a0356049f292",
+          "ZionSpartan":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/19738326/ranked?season=SEASON2015&api_key=" + key), id:19738326, position:0},
+          "Xmithie":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/44979348/ranked?season=SEASON2015&api_key=" + key), id:44979348, position:1},  
+          "Pobelter":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/51409228/ranked?season=SEASON2015&api_key=" + key), id:51409228, position:2},
+          "Aphromoo":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/442232/ranked?season=SEASON2015&api_key=" + key), id:442232, position:3},
+          "Doublelift":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/20132258/ranked?season=SEASON2015&api_key=" + key), id:20132258, position:4}         
+        },
+        "Cloud 9": {
+          "wholeTeam":"https://na.api.pvp.net/api/lol/na/v1.4/summoner/5908, 57029179, 50759139, 56917699, 18991200?api_key=5078e4f1-8729-4653-87c0-a0356049f292",
+          "Balls":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/44989299/ranked?season=SEASON2015&api_key=" + key), id:44989299, position:0},
+          "Hai":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/492066/ranked?season=SEASON2015&api_key=" + key), id:492066, position:1},  
+          "Incarnati0n":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/68479082/ranked?season=SEASON2015&api_key=" + key), id:68479082, position:2},
+          "Sneaky":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/51405/ranked?season=SEASON2015&api_key=" + key), id:51405, position:3},
+          "LemonNation":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/44979325/ranked?season=SEASON2015&api_key=" + key), id:44979325, position:4}         
+        },
+        "Team Liquid": {
+          "wholeTeam":"https://na.api.pvp.net/api/lol/na/v1.4/summoner/5908, 57029179, 50759139, 56917699, 18991200?api_key=5078e4f1-8729-4653-87c0-a0356049f292",
+          "Quas":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/44989299/ranked?season=SEASON2015&api_key=" + key), id:44989299, position:0},
+          "IWillDominate":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/492066/ranked?season=SEASON2015&api_key=" + key), id:492066, position:1},  
+          "FeniX":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/68479082/ranked?season=SEASON2015&api_key=" + key), id:68479082, position:2},
+          "Piglet":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/51405/ranked?season=SEASON2015&api_key=" + key), id:51405, position:3},
+          "Xpecial":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/44979325/ranked?season=SEASON2015&api_key=" + key), id:44979325, position:4}         
+        },             
+      };
 
       function loadJSONAsync(player, callback) {
         var xmlHttp = new XMLHttpRequest();
         if(xmlHttp){
         xmlHttp.onreadystatechange = function(){
             if(xmlHttp.readyState == 1) {
-                console.log("Status 1: Server connection established! <br/>");
+                //console.log("Status 1: Server connection established! <br/>");
             }
             else if (xmlHttp.readyState == 2) {
-               console.log("Status 2: Request recieved! <br/>");
+               //console.log("Status 2: Request recieved! <br/>");
             }
             else if (xmlHttp.readyState == 3) {
-               console.log("Status 3: Processing Request!<br/>");
+               //console.log("Status 3: Processing Request!<br/>");
             }
             else if (xmlHttp.readyState == 4) {
         
@@ -62,46 +94,40 @@
       }
       
     function mostPlayed(stats) {
-      var champs = {};
+      var champs = {};     
+      
+      //Creates object that maps individual player champions to amount of games played.
+      //Also creates object that maps team champions to amount of games played by adding individual player objects.
       for (var i in stats["champions"]) {
         var champid = stats["champions"][i]["id"];
         var most = stats["champions"][i]["stats"].totalSessionsPlayed;
         champs[champid] = most;
+        if (allChamps.hasOwnProperty(champid)) {
+          allChamps[champid] += most;
+        }
+        else {
+          allChamps[champid] = most;
+        }
       }
       
       var idd = stats["summonerId"];
-      console.log(idd);
       var pospospos;
+      var namenamename;
       
+      //Compares player objects to current JSON player ID to figure out player lane.
       for (var team in playersu) {
         for (var p in playersu[team]) {
           if ((playersu[team][p]["id"]) == idd) {
             pospospos = (playersu[team][p]["position"])
           }
         }
-      }
-      console.log(pospospos);  
-      console.log(champs);
-      
-      var highest = 0;   
-      for (var z in champs) {
-        if (champs.hasOwnProperty(z)) {
-          if (champs[z] > highest && z != 0) {
-            var highest = champs[z];
-            var highestid = z;
-          }
-        }
-      }
-      
-      console.log(highestid);
-      console.log(highest);
-      console.log(championlookup.replace("<champid>", highestid));
-      console.log(JSON.stringify(champs));
-      
-      var newurl = championlookup.replace("<champid>", highestid);
+      }     
+      var hchampnid = highest(champs);
+      var newurl = championlookup.replace("<champid>", hchampnid.highestid);
       
       loadJSONAsync(newurl, function(obj) {
-        var playerstats = {champ:obj.key, games:highest, position:pospospos};     
+        loadJSONAsync(
+        var playerstats = {champ:obj.name, games:hchampnid.highest, position:pospospos};     
         players.push(playerstats);
         champs = {};   
       });
@@ -112,6 +138,22 @@
       return(arr.length == cap);
     }
     
+    function highest(obj) {
+      var highest = 0;   
+      for (var z in obj) {
+        if (obj.hasOwnProperty(z)) {
+          if (obj[z] > highest && z != 0) {
+            var highest = obj[z];
+            var highestid = z;
+          }
+        }
+      }
+      var hchampnid = {};
+      hchampnid.highestid = highestid;
+      hchampnid.highest = highest;      
+      return hchampnid;
+    } 
+    
     //Checks if array is filled to cap every interval. Only then is it processed to avoid processing
     //an empty array. Takes a parameter for the array cap that is passed to arrayFinished().
     function checkIfFinished(cap) {
@@ -121,13 +163,17 @@
           clearInterval(timeout);
           players.sort(compare);
           
-          console.log(players[0].champ);
-          console.log(players);
-          document.getElementById("p0").innerHTML = players[0].champ;
-          document.getElementById("p1").innerHTML = players[1].champ;
-          document.getElementById("p2").innerHTML = players[2].champ;
-          document.getElementById("p3").innerHTML = players[3].champ;
-          document.getElementById("p4").innerHTML = players[4].champ;
+          console.log(JSON.stringify(players));
+          document.getElementById("p0").innerHTML = players[0].champ + " " + players[0].games;
+          document.getElementById("p1").innerHTML = players[1].champ + " " + players[1].games;
+          document.getElementById("p2").innerHTML = players[2].champ + " " + players[2].games;
+          document.getElementById("p3").innerHTML = players[3].champ + " " + players[3].games;
+          document.getElementById("p4").innerHTML = players[4].champ + " " + players[4].games;
+
+          var newurl = championlookup.replace("<champid>", (highest(allChamps)).highestid);          
+          loadJSONAsync(newurl, function(obj) {
+            document.getElementById("p5").innerHTML = obj.key;
+          });
         }
       }, 100);
     }
@@ -146,15 +192,35 @@
     function loadTSM() {
       clearPlayerArray();
       
-      loadJSONAsync(playersu["tsm"]["dyrus"]["url"], mostPlayed);
-      loadJSONAsync(playersu["tsm"]["santorin"]["url"], mostPlayed);
-      loadJSONAsync(playersu["tsm"]["bjergsen"]["url"], mostPlayed);
-      loadJSONAsync(playersu["tsm"]["wildturtle"]["url"], mostPlayed);
-      loadJSONAsync(playersu["tsm"]["lustboy"]["url"], mostPlayed);   
+      loadJSONAsync(playersu["TSM"]["Dyrus"]["url"], mostPlayed);
+      loadJSONAsync(playersu["TSM"]["Santorin"]["url"], mostPlayed);
+      loadJSONAsync(playersu["TSM"]["Bjergsen"]["url"], mostPlayed);
+      loadJSONAsync(playersu["TSM"]["Wildturtle"]["url"], mostPlayed);
+      loadJSONAsync(playersu["TSM"]["Lustboy"]["url"], mostPlayed);   
       checkIfFinished(5);      
     }
     
-    loadTSM();
+    function loadCLG() {
+      clearPlayerArray();
+      
+      loadJSONAsync(playersu["CLG"]["ZionSpartan"]["url"], mostPlayed);
+      loadJSONAsync(playersu["CLG"]["Xmithie"]["url"], mostPlayed);
+      loadJSONAsync(playersu["CLG"]["Pobelter"]["url"], mostPlayed);
+      loadJSONAsync(playersu["CLG"]["Doublelift"]["url"], mostPlayed);
+      loadJSONAsync(playersu["CLG"]["Aphromoo"]["url"], mostPlayed);   
+      checkIfFinished(5);      
+    } 
+
+    function loadC9() {
+      clearPlayerArray();
+      
+      loadJSONAsync(playersu["Cloud 9"]["Balls"]["url"], mostPlayed);
+      loadJSONAsync(playersu["Cloud 9"]["Hai"]["url"], mostPlayed);
+      loadJSONAsync(playersu["Cloud 9"]["Incarnati0n"]["url"], mostPlayed);
+      loadJSONAsync(playersu["Cloud 9"]["Sneaky"]["url"], mostPlayed);
+      loadJSONAsync(playersu["Cloud 9"]["LemonNation"]["url"], mostPlayed);   
+      checkIfFinished(5);      
+    }        
     //Callback function is whatever I want to actually use it for.
     //Like getting most-played champ or whatever.
     
