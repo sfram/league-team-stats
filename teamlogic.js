@@ -1,4 +1,3 @@
-
 //Consider doing team win-rate, or something of the sort.
 //Think of stats that populate as a team.
 var nameSpace = {};
@@ -53,56 +52,8 @@ var playersu = {
   },                 
 };
 
-function loadJSONAsync(player, callback) {
-  var xmlHttp = new XMLHttpRequest();
-  if (xmlHttp) {
-    xmlHttp.onreadystatechange = function() {
-      if (xmlHttp.readyState == 1) {
-        //console.log("Status 1: Server connection established! <br/>");
-      } else if (xmlHttp.readyState == 2) {
-        //console.log("Status 2: Request recieved! <br/>");
-      } else if (xmlHttp.readyState == 3) {
-        //console.log("Status 3: Processing Request!<br/>");
-      } else if (xmlHttp.readyState == 4) {
-
-        if (xmlHttp.status == 200) {
-          var text = xmlHttp.responseText;
-          var obj = JSON.parse(text);
-          callback(obj);
-        } else {
-          console.log(xmlHttp.statusText);
-        }
-      }
-    };
-
-    xmlHttp.open("GET", player, true);
-    xmlHttp.send();
-  }
-}
-
-function sendRequest(team) {
-    var xmlHttp = new XMLHttpRequest();
-    if (xmlHttp) {
-      xmlHttp.onreadystatechange = function() {      
-        if (xmlHttp.status == 200) {
-          var text = xmlHttp.responseText;
-          console.log(text);
-        }
-        
-        else {
-          console.log(xmlHttp.statusText);  
-        }
-      };
-      
-      xmlHttp.open("GET", "http://127.0.0.1:8081/" + team, true);
-      xmlHttp.send();      
-    }
-}
-
-
 function mostPlayed(stats) {
   var champs = {};
-
   //Creates object that maps individual player champions to amount of games played.
   //Also creates object that maps team champions to amount of games played by adding individual player objects.
   for (var i in stats["champions"]) {
@@ -218,32 +169,12 @@ function checkIfFinished(cap) {
 
       clearInterval(timeout);
       players.sort(compare);
-
       console.log(JSON.stringify(players));
 
       //Instead of these, send html back to client. Perhaps send back entire divs.
-      var p0 = document.createElement
-      document.getElementById("p0").innerHTML = players[0].summonername + " " + players[0].champ + " " + players[0].games;
-      document.getElementById("p1").innerHTML = players[1].summonername + " " + players[1].champ + " " + players[1].games;
-      document.getElementById("p2").innerHTML = players[2].summonername + " " + players[2].champ + " " + players[2].games;
-      document.getElementById("p3").innerHTML = players[3].summonername + " " + players[3].champ + " " + players[3].games;
-      document.getElementById("p4").innerHTML = players[4].summonername + " " + players[4].champ + " " + players[4].games;
-
-      document.getElementById("i0").src = imgurl + players[0].champ + ".png";
-      document.getElementById("i1").src = imgurl + players[1].champ + ".png";
-      document.getElementById("i2").src = imgurl + players[2].champ + ".png";
-      document.getElementById("i3").src = imgurl + players[3].champ + ".png";
-      document.getElementById("i4").src = imgurl + players[4].champ + ".png";
-
-      document.getElementById("i5").src = iconurl + players[0].iconid + ".png";
-      document.getElementById("i6").src = iconurl + players[1].iconid + ".png";
-      document.getElementById("i7").src = iconurl + players[2].iconid + ".png";
-      document.getElementById("i8").src = iconurl + players[3].iconid + ".png";
-      document.getElementById("i9").src = iconurl + players[4].iconid + ".png";
-
       var url = championurl.replace("<champid>", (highest(allChamps)).highestid);
       loadJSONAsync(url, function(obj) {
-        document.getElementById("p5").innerHTML = obj.name;
+        console.log(obj.name);
       });
     }
   }, 100);
@@ -273,3 +204,49 @@ function loadTeam(team) {
 
 //My idea is to fill an array with member objects.
 //The array will not be processed until it is filled with all members.
+
+//Begin server code
+var http = require("http");
+var fs = require('fs');
+var url = require('url');
+var XMLHttpRequest = require("./xmlhttprequest").XMLHttpRequest;
+eval(fs.readFileSync("requests.js") + '');
+
+http.createServer(function (request, response) {
+  
+  var pathname = url.parse(request.url).pathname;
+  console.log("Request for " + pathname + " received.");
+
+  if (pathname == "/tsm") {
+    loadTeam("Team SoloMid");
+    setTimeout(function() {
+    response.writeHead(200, {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*'
+    });
+      response.end(JSON.stringify(players));
+    }, 20000);
+  }
+  
+}).listen(8081);
+
+console.log('Server running at http://127.0.0.1:8081/');
+
+//Testing node-cache module.
+var nodeCache = require("node-cache");
+var myCache = new nodeCache();
+
+testobj = {my: "Test", variable: 0};
+success = myCache.set("myKey", testobj, 10);
+value = myCache.get("myKey");
+console.log(value);
+
+setTimeout(function() {
+  value2 = myCache.get("myKey");
+  if (value2 == undefined) {
+    console.log("Expired!");
+  }
+  else {
+    console.log(value2);
+  }
+}, 15000);
