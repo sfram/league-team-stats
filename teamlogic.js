@@ -209,7 +209,7 @@ function loadTeam(team) {
 var http = require("http");
 var fs = require('fs');
 var url = require('url');
-var XMLHttpRequest = require("./xmlhttprequest").XMLHttpRequest;
+var XMLHttpRequest = require("./XmlHttpRequest.js").XMLHttpRequest;
 eval(fs.readFileSync("requests.js") + '');
 
 http.createServer(function (request, response) {

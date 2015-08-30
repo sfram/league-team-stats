@@ -29,7 +29,7 @@ function sendRequest(team) {
     var xmlHttp = new XMLHttpRequest();
     if (xmlHttp) {
       xmlHttp.onreadystatechange = function() {      
-        if (xmlHttp.status == 200) {
+        if (xmlHttp.status == 200 && xmlHttp.readyState == 4) {
           var text = xmlHttp.responseText;
           console.log(text);
         }
