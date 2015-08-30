@@ -209,7 +209,7 @@ function loadTeam(team) {
 var http = require("http");
 var fs = require('fs');
 var url = require('url');
-var XMLHttpRequest = require("./XmlHttpRequest.js").XMLHttpRequest;
+var XMLHttpRequest = require("xhr2");
 eval(fs.readFileSync("requests.js") + '');
 
 http.createServer(function (request, response) {
@@ -230,7 +230,7 @@ http.createServer(function (request, response) {
   
 }).listen(8081);
 
-console.log('Server running at http://127.0.0.1:8081/');
+console.log('Server running at http://192.241.146.183:8081/');
 
 //Testing node-cache module.
 var nodeCache = require("node-cache");
