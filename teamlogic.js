@@ -68,16 +68,22 @@ function mostPlayed(stats) {
       won: won,
       lost: lost
     };
-
+	
+	//allChamps is an object which tallies a team's total champion games.
+	//If a champion has already been counted, then add to that id instead of adding a new one.
     if (allChamps.hasOwnProperty(champid)) {
-      allChamps[champid] += all;
+      allChamps[champid].totalAll += all;
+      allChamps[champid].totalWon += won;
+      allChamps[champid].totalLost += lost;	  	    
     } 
     
     else {
-      allChamps[champid] = all;
+      allChamps[champid] = 
+	  {totalAll: all,  
+	  totalWon: won,	
+	  totalLost: lost};		
     }
   }
-  console.log(JSON.stringify(champs));
   var idd = stats["summonerId"];
 
   var pospospos;
@@ -98,7 +104,6 @@ function mostPlayed(stats) {
 
   loadJSONAsync(newurl, function(obj) {
     loadJSONAsync(playernameurl.replace("<id>", idd), function(objj) {
-      console.log(playernameurl.replace("<id>", idd));
       var summonername = objj[idd].name;
       var iconid = objj[idd].profileIconId;
       var playerstats = {
@@ -117,27 +122,7 @@ function mostPlayed(stats) {
   });
 }
 
-//Returns true if players array is filled to cap.  
-function arrayFinished(arr, cap) {
-  return (arr.length == cap);
-}
-
-function highest(obj) {
-  var highest = 0;
-  for (var z in obj) {
-    if (obj.hasOwnProperty(z)) {
-      if (obj[z] > highest && z != 0) {
-        var highest = obj[z];
-        var highestid = z;
-      }
-    }
-  }
-  var hchampnid = {};
-  hchampnid.highestid = highestid;
-  hchampnid.highest = highest;
-  return hchampnid;
-}
-
+//Processes most information for playerstats object.
 function organizeStats(obj) {
   var highest = 0;
   for (var z in obj) {
@@ -146,7 +131,8 @@ function organizeStats(obj) {
         var highest = obj[z].all;
         var highestid = z;
         var champwr = ((obj[z].won / obj[z].all) * 100).toFixed(3);
-      } else if (z == 0) {
+      } 
+	  else if (z == 0) {
         var totalgames = obj[z].all;
         var winrate = ((obj[z].won / obj[z].all) * 100).toFixed(3);
       }
@@ -161,23 +147,50 @@ function organizeStats(obj) {
   return hchampnid;
 }
 
+function highest(obj) {
+  var highest = 0;
+  for (var z in obj) {
+    if (obj.hasOwnProperty(z)) {
+		  if (obj[z].totalAll > highest && z != 0) {
+			var highest = obj[z].totalAll;
+			var highestid = z;
+		  }
+	  else if (z == 0) {
+		
+	  }
+    }
+  }
+  var hchampnid = {};
+  hchampnid.teamWinRate = (obj[0].totalWon / obj[0].totalAll);
+  hchampnid.highestid = highestid;
+  hchampnid.highest = highest;
+  return hchampnid;
+}
+
+//Once all players have been added to player array, this function is called to add whole team statistics.
+function addTeamStats() {
+	var url = championurl.replace("<champid>", (highest(allChamps)).highestid);
+    loadJSONAsync(url, function(obj) {
+        players.push(obj.name)
+		players.push((highest(allChamps)).teamWinRate);
+    });
+}
+
+//Returns true if players array is filled to cap.  
+function arrayFinished(arr, cap) {
+  return (arr.length == cap);
+}
+
 //Checks if array is filled to cap every interval. Only then is it processed to avoid processing
 //an empty array. Takes a parameter for the array cap that is passed to arrayFinished().
-function checkIfFinished(cap) {
+//Also takes a parameter for a callback function that is called once the array is filled to cap.
+function checkIfFinished(cap, func) {
   var timeout = setInterval(function() {
     if (arrayFinished(players, cap)) {
-
-      clearInterval(timeout);
-      players.sort(compare);
-      console.log(JSON.stringify(players));
-
-      //Instead of these, send html back to client. Perhaps send back entire divs.
-      var url = championurl.replace("<champid>", (highest(allChamps)).highestid);
-      loadJSONAsync(url, function(obj) {
-        console.log(obj.name);
-      });
+		clearInterval(timeout);
+		func();
     }
-  }, 100);
+  }, 100);	
 }
 
 //Sorts in ascending order by player position down the map, top to adc.
@@ -194,9 +207,9 @@ function clearPlayerArray() {
 function loadTeam(team) {
   clearPlayerArray();
   for (var player in playersu[team]) {
-    loadJSONAsync(playersu[team][player]["url"], mostPlayed);
-    checkIfFinished(5);
+    loadJSONAsync(playersu[team][player]["url"], mostPlayed);	
   }
+  checkIfFinished(5, addTeamStats);
 }
 
 //Callback function is whatever I want to actually use it for.
@@ -207,8 +220,9 @@ function loadTeam(team) {
 
 //Begin server code
 var http = require("http");
-var fs = require('fs');
-var url = require('url');
+var fs = require("fs");
+var url = require("url");
+var async = require("async");
 var XMLHttpRequest = require("xhr2");
 eval(fs.readFileSync("requests.js") + '');
 
@@ -219,13 +233,13 @@ http.createServer(function (request, response) {
 
   if (pathname == "/tsm") {
     loadTeam("Team SoloMid");
-    setTimeout(function() {
-    response.writeHead(200, {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
-    });
-      response.end(JSON.stringify(players));
-    }, 20000);
+	checkIfFinished(7, function() {
+		response.writeHead(200, {
+		'Content-Type': 'application/json',
+		'Access-Control-Allow-Origin': '*'
+		});
+		  response.end(JSON.stringify(players));
+	});
   }
   
 }).listen(8081);
