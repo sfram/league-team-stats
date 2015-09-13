@@ -1,4 +1,4 @@
-function loadJSONAsync(player, callback) {
+  function loadJSONAsync(player, callback) {
   var xmlHttp = new XMLHttpRequest();
   if (xmlHttp) {
     xmlHttp.onreadystatechange = function() {

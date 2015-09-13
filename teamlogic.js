@@ -13,7 +13,6 @@ var imgurl = "http://ddragon.leagueoflegends.com/cdn/" + ddversion + "/img/champ
 var iconurl = "http://ddragon.leagueoflegends.com/cdn/" + ddversion + "/img/profileicon/";
 var playernameurl = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/<id>?api_key=" + key;
 
-//"wholeTeam":"https://na.api.pvp.net/api/lol/na/v1.4/summoner/5908, 57029179, 50759139, 56917699, 18991200?api_key=",
 var playersu = {
   "Team SoloMid": {
     "Dyrus":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/5908/ranked?season=SEASON2015&api_key=" + key), id:5908, position:0},
@@ -155,10 +154,9 @@ function highest(obj) {
 			var highest = obj[z].totalAll;
 			var highestid = z;
 		  }
-	  else if (z == 0) {
-		
+	  else if (z == 0) {		
 	  }
-    }
+      }
   }
   var hchampnid = {};
   hchampnid.teamWinRate = (obj[0].totalWon / obj[0].totalAll);
@@ -222,7 +220,6 @@ function loadTeam(team) {
 var http = require("http");
 var fs = require("fs");
 var url = require("url");
-var async = require("async");
 var XMLHttpRequest = require("xhr2");
 eval(fs.readFileSync("requests.js") + '');
 
@@ -233,12 +230,12 @@ http.createServer(function (request, response) {
 
   if (pathname == "/tsm") {
     loadTeam("Team SoloMid");
-	checkIfFinished(7, function() {
-		response.writeHead(200, {
-		'Content-Type': 'application/json',
-		'Access-Control-Allow-Origin': '*'
-		});
-		  response.end(JSON.stringify(players));
+	  checkIfFinished(7, function() {
+  		response.writeHead(200, {
+  		'Content-Type': 'application/json',
+  		'Access-Control-Allow-Origin': '*'
+  		});
+  		  response.end(JSON.stringify(players));
 	});
   }
   
