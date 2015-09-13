@@ -1,4 +1,4 @@
-  function loadJSONAsync(player, callback) {
+function loadJSONAsync(player, callback) {
   var xmlHttp = new XMLHttpRequest();
   if (xmlHttp) {
     xmlHttp.onreadystatechange = function() {
@@ -39,7 +39,7 @@ function sendRequest(team) {
         }
       };
       
-      xmlHttp.open("GET", "http://192.241.146.183:8081/" + team, true);
+      xmlHttp.open("GET", "http://127.0.0.1:8081/" + team, true);
       xmlHttp.send();      
     }
 }
