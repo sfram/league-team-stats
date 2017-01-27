@@ -15,39 +15,39 @@ var playernameurl = "https://na.api.pvp.net/api/lol/na/v1.4/summoner/<id>?api_ke
 
 var playersu = {
   "Team SoloMid": {
-    "Dyrus":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/5908/ranked?season=SEASON2015&api_key=" + key), id:5908, position:0},
-    "Santorin":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/57029179/ranked?season=SEASON2015&api_key=" + key), id:57029179, position:1},  
+    "Hauntzer":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/5908/ranked?season=SEASON2015&api_key=" + key), id:5908, position:0},
+    "Svenskeren":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/57029179/ranked?season=SEASON2015&api_key=" + key), id:57029179, position:1},  
     "Bjergsen":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50759139/ranked?season=SEASON2015&api_key=" + key), id:50759139, position:2},
-    "Lustboy":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/56917699/ranked?season=SEASON2015&api_key=" + key), id:56917699, position:3},
+    "Biofrost":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/56917699/ranked?season=SEASON2015&api_key=" + key), id:56917699, position:3},
     "Wildturtle":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/18991200/ranked?season=SEASON2015&api_key=" + key), id:18991200, position:4}
    },
   "Counter Logic Gaming": {
     "ZionSpartan":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/19738326/ranked?season=SEASON2015&api_key=" + key), id:19738326, position:0},
     "Xmithie":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/44979348/ranked?season=SEASON2015&api_key=" + key), id:44979348, position:1},  
-    "Pobelter":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/51409228/ranked?season=SEASON2015&api_key=" + key), id:51409228, position:2},
+    "HuHi":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/51409228/ranked?season=SEASON2015&api_key=" + key), id:51409228, position:2},
     "Aphromoo":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/442232/ranked?season=SEASON2015&api_key=" + key), id:442232, position:3},
-    "Doublelift":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/20132258/ranked?season=SEASON2015&api_key=" + key), id:20132258, position:4}         
+    "Stixxay":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/20132258/ranked?season=SEASON2015&api_key=" + key), id:20132258, position:4}         
   },
   "Cloud9": {
-    "Balls":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/44989299/ranked?season=SEASON2015&api_key=" + key), id:44989299, position:0},
-    "Hai":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/492066/ranked?season=SEASON2015&api_key=" + key), id:492066, position:1},
-    "Incarnati0n":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/68479082/ranked?season=SEASON2015&api_key=" + key), id:68479082, position:2},
+    "Impact":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/44989299/ranked?season=SEASON2015&api_key=" + key), id:44989299, position:0},
+    "Contractz":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/492066/ranked?season=SEASON2015&api_key=" + key), id:492066, position:1},
+    "Jensen":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/68479082/ranked?season=SEASON2015&api_key=" + key), id:68479082, position:2},
     "Sneaky":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/51405/ranked?season=SEASON2015&api_key=" + key), id:51405, position:3},
-    "LemonNation":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/44979325/ranked?season=SEASON2015&api_key=" + key), id:44979325, position:4}      
+    "Smoothie":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/44979325/ranked?season=SEASON2015&api_key=" + key), id:44979325, position:4}      
   },
   "Team Liquid": {
-    "Quas":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50539313/ranked?season=SEASON2015&api_key=" + key), id:50539313, position:0},
-    "IWillDominate":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50759303/ranked?season=SEASON2015&api_key=" + key), id:50759303, position:1},  
-    "FeniX":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/60939398/ranked?season=SEASON2015&api_key=" + key), id:60939398, position:2},
+    "Lourlo":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50539313/ranked?season=SEASON2015&api_key=" + key), id:50539313, position:0},
+    "Reignover":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/50759303/ranked?season=SEASON2015&api_key=" + key), id:50759303, position:1},  
+    "GoldenGlue":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/60939398/ranked?season=SEASON2015&api_key=" + key), id:60939398, position:2},
     "Piglet":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/62374009/ranked?season=SEASON2015&api_key=" + key), id:62374009, position:3},
-    "Xpecial":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/19199530/ranked?season=SEASON2015&api_key=" + key), id:19199530, position:4}         
+    "Matt":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/19199530/ranked?season=SEASON2015&api_key=" + key), id:19199530, position:4}         
   },
   "Team Dignitas": {
-    "Gamsu":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/65399097/ranked?season=SEASON2015&api_key=" + key), id:65399097, position:0},
-    "Helios":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/55779191/ranked?season=SEASON2015&api_key=" + key), id:55779191, position:1},  
-    "Shiphtur":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/19967304/ranked?season=SEASON2015&api_key=" + key), id:19967304, position:2},
-    "CoreJJ":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/62599179/ranked?season=SEASON2015&api_key=" + key), id:62599179, position:3},
-    "KiWiKiD":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/24332462/ranked?season=SEASON2015&api_key=" + key), id:24332462, position:4}         
+    "SSumday":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/65399097/ranked?season=SEASON2015&api_key=" + key), id:65399097, position:0},
+    "Chaser":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/55779191/ranked?season=SEASON2015&api_key=" + key), id:55779191, position:1},  
+    "Keane":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/19967304/ranked?season=SEASON2015&api_key=" + key), id:19967304, position:2},
+    "LOD":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/62599179/ranked?season=SEASON2015&api_key=" + key), id:62599179, position:3},
+    "Xpecial":{url:("https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/24332462/ranked?season=SEASON2015&api_key=" + key), id:24332462, position:4}         
   },                 
 };
 
